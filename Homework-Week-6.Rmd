@@ -168,6 +168,7 @@ log_regression_plot
 
 ##Original data:
 
+<<<<<<< HEAD
 m
 beta1<-1.218
 beta0<-248.952
@@ -193,3 +194,8 @@ CI<-c(ylwr,yupr)
 CI #Confidence interval
 
 ##Discussion: First of all, I know that this last section isn't technically right as I'm reporting confidence intervals and not prediction intervals. I know that we are meant to use the predict() function, but when I tried to format it as we did in class [predict(m,newdata=data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.90)] I kept getting an error message that showed that it was trying to pull predicted intervals for all the values in that column rather than just predicting a point estimate and interval for 800 grams.. I'll be sure to come trouble-shoot this with you on Wednesday if I can't figure it out by then. However, to answer the question you posed, I think it is unlikely that either regression will provide a reliable prediction of longevity given their relatively low coefficients of determination. Also, from looking at the plots of the two regressions, the original variables are clearly very skewed to the left of the regrssion, and there is a lower level of certainty as x increases. For a brain size as high as 800 grams, we can not expect a realistic prediction from this model (as evidenced by the point estimate of ~1223 months for a brain size of 800g). In regard to which model is preferable, judging from the plots, the log-transformed data appears to adhere more closely to a normal distribution while also showing more consistency in confidence intervals. Overall, this would make the log-transformed model more conducive to predicting longevity from a wide range of brain sizes.
+=======
+
+##Log-transformed data:
+
+>>>>>>> origin/master

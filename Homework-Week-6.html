@@ -169,10 +169,288 @@ $(document).ready(function () {
 <pre class="r"><code>library(curl)
 f&lt;-curl(&quot;https://raw.githubusercontent.com/difiore/ADA2016/master/KamilarAndCooperData.csv&quot;)
 d&lt;-read.csv(f,header=TRUE,sep = &quot;,&quot;,stringsAsFactors = FALSE)
+<<<<<<< HEAD
 log_brain&lt;-log(d$Brain_Size_Species_Mean)
 log_longevity&lt;-log(d$MaxLongevity_m)
 df&lt;-cbind(d,log_brain,log_longevity)
 ##Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
+=======
+head(d)</code></pre>
+<pre><code>##               Scientific_Name          Family          Genus      Species
+## 1 Allenopithecus_nigroviridis Cercopithecidae Allenopithecus nigroviridis
+## 2         Allocebus_trichotis Cercopithecidae      Allocebus    trichotis
+## 3           Alouatta_belzebul        Atelidae       Alouatta     belzebul
+## 4             Alouatta_caraya        Atelidae       Alouatta       caraya
+## 5            Alouatta_guariba        Atelidae       Alouatta      guariba
+## 6           Alouatta_palliata        Atelidae       Alouatta     palliata
+##   Brain_Size_Species_Mean Brain_Size_Female_Mean   Brain_size_Ref
+## 1                   58.02                  53.70 Isler et al 2008
+## 2                      NA                     NA                 
+## 3                   52.84                  51.19 Isler et al 2008
+## 4                   52.63                  47.80 Isler et al 2008
+## 5                   51.70                  49.08 Isler et al 2008
+## 6                   49.88                  48.04 Isler et al 2008
+##   Body_mass_male_mean Body_mass_female_mean Mass_Dimorphism
+## 1                6130                  3180           1.928
+## 2                  92                    84           1.095
+## 3                7270                  5520           1.317
+## 4                6525                  4240           1.539
+## 5                5800                  4550           1.275
+## 6                7150                  5350           1.336
+##                 Mass_Ref MeanGroupSize AdultMales AdultFemale
+## 1       Isler et al 2008            NA         NA          NA
+## 2 Smith and Jungers 1997          1.00       1.00         1.0
+## 3       Isler et al 2008          7.00       1.00         1.0
+## 4       Isler et al 2008          8.00       2.30         3.3
+## 5       Isler et al 2008          6.53       1.37         2.2
+## 6       Isler et al 2008         12.00       2.90         6.3
+##   AdultSexRatio
+## 1            NA
+## 2            NA
+## 3          1.00
+## 4          1.43
+## 5          1.61
+## 6          2.17
+##                                                     Social_Organization_Ref
+## 1                                                                          
+## 2                                                             Kappeler 1997
+## 3                                                       Campbell et al 2007
+## 4 van Schaik et al. 1999; Kappeler and Pereira 2003; Nunn &amp; van Schaik 2000
+## 5                                                       Campbell et al 2007
+## 6 van Schaik et al. 1999; Kappeler and Pereira 2003; Nunn &amp; van Schaik 2000
+##   InterbirthInterval_d Gestation WeaningAge_d MaxLongevity_m LitterSz
+## 1                   NA        NA       106.15          276.0     1.01
+## 2                   NA        NA           NA             NA     1.00
+## 3                   NA        NA           NA             NA       NA
+## 4               337.62       187       323.16          243.6     1.01
+## 5                   NA        NA           NA             NA       NA
+## 6               684.37       186       495.60          300.0     1.02
+##    Life_History_Ref GR_MidRangeLat_dd Precip_Mean_mm Temp_Mean_degC
+## 1 Jones et al. 2009             -0.17         1574.0           25.2
+## 2                              -16.59         1902.3           20.3
+## 3                               -6.80         1643.5           24.9
+## 4 Jones et al. 2009            -20.34         1166.4           22.9
+## 5                              -21.13         1332.3           19.6
+## 6 Jones et al. 2009              6.95         1852.6           23.7
+##   AET_Mean_mm PET_Mean_mm       Climate_Ref HomeRange_km2
+## 1      1517.8      1589.4 Jones et al. 2009            NA
+## 2      1388.2      1653.7 Jones et al. 2009            NA
+## 3      1286.6      1549.8 Jones et al. 2009            NA
+## 4      1193.1      1404.9 Jones et al. 2009            NA
+## 5      1225.7      1332.2 Jones et al. 2009          0.03
+## 6      1300.0      1633.9 Jones et al. 2009          0.19
+##        HomeRangeRef DayLength_km     DayLengthRef Territoriality Fruit
+## 1                             NA                              NA    NA
+## 2                             NA                              NA    NA
+## 3                             NA                              NA  57.3
+## 4                           0.40 Nunn et al. 2003             NA  23.8
+## 5 Jones et al. 2009           NA                              NA   5.2
+## 6 Jones et al. 2009         0.32 Nunn et al. 2003         0.6506  33.1
+##   Leaves Fauna             DietRef1 Canine_Dimorphism
+## 1                                               2.210
+## 2                                                  NA
+## 3   19.1   0.0 Campbell et al. 2007             1.811
+## 4   67.7   0.0 Campbell et al. 2007             1.542
+## 5   73.0   0.0 Campbell et al. 2007             1.783
+## 6   56.4   0.0 Campbell et al. 2007             1.703
+##   Canine_Dimorphism_Ref  Feed  Move  Rest Social  Activity_Budget_Ref
+## 1   Plavcan &amp; Ruff 2008    NA    NA    NA     NA                     
+## 2                          NA    NA    NA     NA                     
+## 3   Plavcan &amp; Ruff 2008 13.75 18.75 57.30  10.00 Campbell et al. 2007
+## 4   Plavcan &amp; Ruff 2008 15.90 17.60 61.60   4.90 Campbell et al. 2007
+## 5   Plavcan &amp; Ruff 2008 18.33 14.33 64.37   3.00 Campbell et al. 2007
+## 6   Plavcan &amp; Ruff 2008 17.94 12.32 66.14   3.64 Campbell et al. 2007</code></pre>
+<pre class="r"><code>str(d)</code></pre>
+<pre><code>## 'data.frame':    213 obs. of  44 variables:
+##  $ Scientific_Name        : chr  &quot;Allenopithecus_nigroviridis&quot; &quot;Allocebus_trichotis&quot; &quot;Alouatta_belzebul&quot; &quot;Alouatta_caraya&quot; ...
+##  $ Family                 : chr  &quot;Cercopithecidae&quot; &quot;Cercopithecidae&quot; &quot;Atelidae&quot; &quot;Atelidae&quot; ...
+##  $ Genus                  : chr  &quot;Allenopithecus&quot; &quot;Allocebus&quot; &quot;Alouatta&quot; &quot;Alouatta&quot; ...
+##  $ Species                : chr  &quot;nigroviridis&quot; &quot;trichotis&quot; &quot;belzebul&quot; &quot;caraya&quot; ...
+##  $ Brain_Size_Species_Mean: num  58 NA 52.8 52.6 51.7 ...
+##  $ Brain_Size_Female_Mean : num  53.7 NA 51.2 47.8 49.1 ...
+##  $ Brain_size_Ref         : chr  &quot;Isler et al 2008&quot; &quot;&quot; &quot;Isler et al 2008&quot; &quot;Isler et al 2008&quot; ...
+##  $ Body_mass_male_mean    : num  6130 92 7270 6525 5800 ...
+##  $ Body_mass_female_mean  : num  3180 84 5520 4240 4550 5350 6430 5210 1230 NA ...
+##  $ Mass_Dimorphism        : num  1.93 1.09 1.32 1.54 1.27 ...
+##  $ Mass_Ref               : chr  &quot;Isler et al 2008&quot; &quot;Smith and Jungers 1997&quot; &quot;Isler et al 2008&quot; &quot;Isler et al 2008&quot; ...
+##  $ MeanGroupSize          : num  NA 1 7 8 6.53 12 6.6 7.1 3.1 3 ...
+##  $ AdultMales             : num  NA 1 1 2.3 1.37 ...
+##  $ AdultFemale            : num  NA 1 1 3.3 2.2 ...
+##  $ AdultSexRatio          : num  NA NA 1 1.43 1.61 2.17 1.13 1.29 1 1 ...
+##  $ Social_Organization_Ref: chr  &quot;&quot; &quot;Kappeler 1997&quot; &quot;Campbell et al 2007&quot; &quot;van Schaik et al. 1999; Kappeler and Pereira 2003; Nunn &amp; van Schaik 2000&quot; ...
+##  $ InterbirthInterval_d   : num  NA NA NA 338 NA ...
+##  $ Gestation              : num  NA NA NA 187 NA 186 187 190 NA NA ...
+##  $ WeaningAge_d           : num  106 NA NA 323 NA ...
+##  $ MaxLongevity_m         : num  276 NA NA 244 NA ...
+##  $ LitterSz               : num  1.01 1 NA 1.01 NA 1.02 1.01 1.42 1 NA ...
+##  $ Life_History_Ref       : chr  &quot;Jones et al. 2009&quot; &quot;&quot; &quot;&quot; &quot;Jones et al. 2009&quot; ...
+##  $ GR_MidRangeLat_dd      : num  -0.17 -16.59 -6.8 -20.34 -21.13 ...
+##  $ Precip_Mean_mm         : num  1574 1902 1644 1166 1332 ...
+##  $ Temp_Mean_degC         : num  25.2 20.3 24.9 22.9 19.6 23.7 25.1 25.1 24.6 NA ...
+##  $ AET_Mean_mm            : num  1518 1388 1287 1193 1226 ...
+##  $ PET_Mean_mm            : num  1589 1654 1550 1405 1332 ...
+##  $ Climate_Ref            : chr  &quot;Jones et al. 2009&quot; &quot;Jones et al. 2009&quot; &quot;Jones et al. 2009&quot; &quot;Jones et al. 2009&quot; ...
+##  $ HomeRange_km2          : num  NA NA NA NA 0.03 0.19 0.3 0.1 0.095 NA ...
+##  $ HomeRangeRef           : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ DayLength_km           : num  NA NA NA 0.4 NA 0.32 NA 0.55 NA NA ...
+##  $ DayLengthRef           : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;Nunn et al. 2003&quot; ...
+##  $ Territoriality         : num  NA NA NA NA NA ...
+##  $ Fruit                  : num  NA NA 57.3 23.8 5.2 33.1 40.8 40 45 NA ...
+##  $ Leaves                 : chr  &quot;&quot; &quot;&quot; &quot;19.1&quot; &quot;67.7&quot; ...
+##  $ Fauna                  : chr  &quot;&quot; &quot;&quot; &quot;0.0&quot; &quot;0.0&quot; ...
+##  $ DietRef1               : chr  &quot;&quot; &quot;&quot; &quot;Campbell et al. 2007&quot; &quot;Campbell et al. 2007&quot; ...
+##  $ Canine_Dimorphism      : num  2.21 NA 1.81 1.54 1.78 ...
+##  $ Canine_Dimorphism_Ref  : chr  &quot;Plavcan &amp; Ruff 2008&quot; &quot;&quot; &quot;Plavcan &amp; Ruff 2008&quot; &quot;Plavcan &amp; Ruff 2008&quot; ...
+##  $ Feed                   : num  NA NA 13.8 15.9 18.3 ...
+##  $ Move                   : num  NA NA 18.8 17.6 14.3 ...
+##  $ Rest                   : num  NA NA 57.3 61.6 64.4 ...
+##  $ Social                 : num  NA NA 10 4.9 3 3.64 3.8 2.5 NA NA ...
+##  $ Activity_Budget_Ref    : chr  &quot;&quot; &quot;&quot; &quot;Campbell et al. 2007&quot; &quot;Campbell et al. 2007&quot; ...</code></pre>
+<pre class="r"><code>log_brain&lt;-log(d$Brain_Size_Species_Mean)
+log_longevity&lt;-log(d$MaxLongevity_m)
+df&lt;-cbind(d,log_brain,log_longevity)
+head(df)</code></pre>
+<pre><code>##               Scientific_Name          Family          Genus      Species
+## 1 Allenopithecus_nigroviridis Cercopithecidae Allenopithecus nigroviridis
+## 2         Allocebus_trichotis Cercopithecidae      Allocebus    trichotis
+## 3           Alouatta_belzebul        Atelidae       Alouatta     belzebul
+## 4             Alouatta_caraya        Atelidae       Alouatta       caraya
+## 5            Alouatta_guariba        Atelidae       Alouatta      guariba
+## 6           Alouatta_palliata        Atelidae       Alouatta     palliata
+##   Brain_Size_Species_Mean Brain_Size_Female_Mean   Brain_size_Ref
+## 1                   58.02                  53.70 Isler et al 2008
+## 2                      NA                     NA                 
+## 3                   52.84                  51.19 Isler et al 2008
+## 4                   52.63                  47.80 Isler et al 2008
+## 5                   51.70                  49.08 Isler et al 2008
+## 6                   49.88                  48.04 Isler et al 2008
+##   Body_mass_male_mean Body_mass_female_mean Mass_Dimorphism
+## 1                6130                  3180           1.928
+## 2                  92                    84           1.095
+## 3                7270                  5520           1.317
+## 4                6525                  4240           1.539
+## 5                5800                  4550           1.275
+## 6                7150                  5350           1.336
+##                 Mass_Ref MeanGroupSize AdultMales AdultFemale
+## 1       Isler et al 2008            NA         NA          NA
+## 2 Smith and Jungers 1997          1.00       1.00         1.0
+## 3       Isler et al 2008          7.00       1.00         1.0
+## 4       Isler et al 2008          8.00       2.30         3.3
+## 5       Isler et al 2008          6.53       1.37         2.2
+## 6       Isler et al 2008         12.00       2.90         6.3
+##   AdultSexRatio
+## 1            NA
+## 2            NA
+## 3          1.00
+## 4          1.43
+## 5          1.61
+## 6          2.17
+##                                                     Social_Organization_Ref
+## 1                                                                          
+## 2                                                             Kappeler 1997
+## 3                                                       Campbell et al 2007
+## 4 van Schaik et al. 1999; Kappeler and Pereira 2003; Nunn &amp; van Schaik 2000
+## 5                                                       Campbell et al 2007
+## 6 van Schaik et al. 1999; Kappeler and Pereira 2003; Nunn &amp; van Schaik 2000
+##   InterbirthInterval_d Gestation WeaningAge_d MaxLongevity_m LitterSz
+## 1                   NA        NA       106.15          276.0     1.01
+## 2                   NA        NA           NA             NA     1.00
+## 3                   NA        NA           NA             NA       NA
+## 4               337.62       187       323.16          243.6     1.01
+## 5                   NA        NA           NA             NA       NA
+## 6               684.37       186       495.60          300.0     1.02
+##    Life_History_Ref GR_MidRangeLat_dd Precip_Mean_mm Temp_Mean_degC
+## 1 Jones et al. 2009             -0.17         1574.0           25.2
+## 2                              -16.59         1902.3           20.3
+## 3                               -6.80         1643.5           24.9
+## 4 Jones et al. 2009            -20.34         1166.4           22.9
+## 5                              -21.13         1332.3           19.6
+## 6 Jones et al. 2009              6.95         1852.6           23.7
+##   AET_Mean_mm PET_Mean_mm       Climate_Ref HomeRange_km2
+## 1      1517.8      1589.4 Jones et al. 2009            NA
+## 2      1388.2      1653.7 Jones et al. 2009            NA
+## 3      1286.6      1549.8 Jones et al. 2009            NA
+## 4      1193.1      1404.9 Jones et al. 2009            NA
+## 5      1225.7      1332.2 Jones et al. 2009          0.03
+## 6      1300.0      1633.9 Jones et al. 2009          0.19
+##        HomeRangeRef DayLength_km     DayLengthRef Territoriality Fruit
+## 1                             NA                              NA    NA
+## 2                             NA                              NA    NA
+## 3                             NA                              NA  57.3
+## 4                           0.40 Nunn et al. 2003             NA  23.8
+## 5 Jones et al. 2009           NA                              NA   5.2
+## 6 Jones et al. 2009         0.32 Nunn et al. 2003         0.6506  33.1
+##   Leaves Fauna             DietRef1 Canine_Dimorphism
+## 1                                               2.210
+## 2                                                  NA
+## 3   19.1   0.0 Campbell et al. 2007             1.811
+## 4   67.7   0.0 Campbell et al. 2007             1.542
+## 5   73.0   0.0 Campbell et al. 2007             1.783
+## 6   56.4   0.0 Campbell et al. 2007             1.703
+##   Canine_Dimorphism_Ref  Feed  Move  Rest Social  Activity_Budget_Ref
+## 1   Plavcan &amp; Ruff 2008    NA    NA    NA     NA                     
+## 2                          NA    NA    NA     NA                     
+## 3   Plavcan &amp; Ruff 2008 13.75 18.75 57.30  10.00 Campbell et al. 2007
+## 4   Plavcan &amp; Ruff 2008 15.90 17.60 61.60   4.90 Campbell et al. 2007
+## 5   Plavcan &amp; Ruff 2008 18.33 14.33 64.37   3.00 Campbell et al. 2007
+## 6   Plavcan &amp; Ruff 2008 17.94 12.32 66.14   3.64 Campbell et al. 2007
+##   log_brain log_longevity
+## 1  4.060788      5.620401
+## 2        NA            NA
+## 3  3.967268            NA
+## 4  3.963286      5.495528
+## 5  3.945458            NA
+## 6  3.909620      5.703782</code></pre>
+<pre class="r"><code>str(df)</code></pre>
+<pre><code>## 'data.frame':    213 obs. of  46 variables:
+##  $ Scientific_Name        : chr  &quot;Allenopithecus_nigroviridis&quot; &quot;Allocebus_trichotis&quot; &quot;Alouatta_belzebul&quot; &quot;Alouatta_caraya&quot; ...
+##  $ Family                 : chr  &quot;Cercopithecidae&quot; &quot;Cercopithecidae&quot; &quot;Atelidae&quot; &quot;Atelidae&quot; ...
+##  $ Genus                  : chr  &quot;Allenopithecus&quot; &quot;Allocebus&quot; &quot;Alouatta&quot; &quot;Alouatta&quot; ...
+##  $ Species                : chr  &quot;nigroviridis&quot; &quot;trichotis&quot; &quot;belzebul&quot; &quot;caraya&quot; ...
+##  $ Brain_Size_Species_Mean: num  58 NA 52.8 52.6 51.7 ...
+##  $ Brain_Size_Female_Mean : num  53.7 NA 51.2 47.8 49.1 ...
+##  $ Brain_size_Ref         : chr  &quot;Isler et al 2008&quot; &quot;&quot; &quot;Isler et al 2008&quot; &quot;Isler et al 2008&quot; ...
+##  $ Body_mass_male_mean    : num  6130 92 7270 6525 5800 ...
+##  $ Body_mass_female_mean  : num  3180 84 5520 4240 4550 5350 6430 5210 1230 NA ...
+##  $ Mass_Dimorphism        : num  1.93 1.09 1.32 1.54 1.27 ...
+##  $ Mass_Ref               : chr  &quot;Isler et al 2008&quot; &quot;Smith and Jungers 1997&quot; &quot;Isler et al 2008&quot; &quot;Isler et al 2008&quot; ...
+##  $ MeanGroupSize          : num  NA 1 7 8 6.53 12 6.6 7.1 3.1 3 ...
+##  $ AdultMales             : num  NA 1 1 2.3 1.37 ...
+##  $ AdultFemale            : num  NA 1 1 3.3 2.2 ...
+##  $ AdultSexRatio          : num  NA NA 1 1.43 1.61 2.17 1.13 1.29 1 1 ...
+##  $ Social_Organization_Ref: chr  &quot;&quot; &quot;Kappeler 1997&quot; &quot;Campbell et al 2007&quot; &quot;van Schaik et al. 1999; Kappeler and Pereira 2003; Nunn &amp; van Schaik 2000&quot; ...
+##  $ InterbirthInterval_d   : num  NA NA NA 338 NA ...
+##  $ Gestation              : num  NA NA NA 187 NA 186 187 190 NA NA ...
+##  $ WeaningAge_d           : num  106 NA NA 323 NA ...
+##  $ MaxLongevity_m         : num  276 NA NA 244 NA ...
+##  $ LitterSz               : num  1.01 1 NA 1.01 NA 1.02 1.01 1.42 1 NA ...
+##  $ Life_History_Ref       : chr  &quot;Jones et al. 2009&quot; &quot;&quot; &quot;&quot; &quot;Jones et al. 2009&quot; ...
+##  $ GR_MidRangeLat_dd      : num  -0.17 -16.59 -6.8 -20.34 -21.13 ...
+##  $ Precip_Mean_mm         : num  1574 1902 1644 1166 1332 ...
+##  $ Temp_Mean_degC         : num  25.2 20.3 24.9 22.9 19.6 23.7 25.1 25.1 24.6 NA ...
+##  $ AET_Mean_mm            : num  1518 1388 1287 1193 1226 ...
+##  $ PET_Mean_mm            : num  1589 1654 1550 1405 1332 ...
+##  $ Climate_Ref            : chr  &quot;Jones et al. 2009&quot; &quot;Jones et al. 2009&quot; &quot;Jones et al. 2009&quot; &quot;Jones et al. 2009&quot; ...
+##  $ HomeRange_km2          : num  NA NA NA NA 0.03 0.19 0.3 0.1 0.095 NA ...
+##  $ HomeRangeRef           : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+##  $ DayLength_km           : num  NA NA NA 0.4 NA 0.32 NA 0.55 NA NA ...
+##  $ DayLengthRef           : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;Nunn et al. 2003&quot; ...
+##  $ Territoriality         : num  NA NA NA NA NA ...
+##  $ Fruit                  : num  NA NA 57.3 23.8 5.2 33.1 40.8 40 45 NA ...
+##  $ Leaves                 : chr  &quot;&quot; &quot;&quot; &quot;19.1&quot; &quot;67.7&quot; ...
+##  $ Fauna                  : chr  &quot;&quot; &quot;&quot; &quot;0.0&quot; &quot;0.0&quot; ...
+##  $ DietRef1               : chr  &quot;&quot; &quot;&quot; &quot;Campbell et al. 2007&quot; &quot;Campbell et al. 2007&quot; ...
+##  $ Canine_Dimorphism      : num  2.21 NA 1.81 1.54 1.78 ...
+##  $ Canine_Dimorphism_Ref  : chr  &quot;Plavcan &amp; Ruff 2008&quot; &quot;&quot; &quot;Plavcan &amp; Ruff 2008&quot; &quot;Plavcan &amp; Ruff 2008&quot; ...
+##  $ Feed                   : num  NA NA 13.8 15.9 18.3 ...
+##  $ Move                   : num  NA NA 18.8 17.6 14.3 ...
+##  $ Rest                   : num  NA NA 57.3 61.6 64.4 ...
+##  $ Social                 : num  NA NA 10 4.9 3 3.64 3.8 2.5 NA NA ...
+##  $ Activity_Budget_Ref    : chr  &quot;&quot; &quot;&quot; &quot;Campbell et al. 2007&quot; &quot;Campbell et al. 2007&quot; ...
+##  $ log_brain              : num  4.06 NA 3.97 3.96 3.95 ...
+##  $ log_longevity          : num  5.62 NA NA 5.5 NA ...</code></pre>
+<pre class="r"><code>##Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
+>>>>>>> origin/master
 
 library(ggplot2)
 
@@ -309,9 +587,13 @@ ci</code></pre>
 <pre><code>##                                   5 %      95 %
 ## (Intercept)                230.540738 267.36379
 ## df$Brain_Size_Species_Mean   1.035571   1.40041</code></pre>
+<<<<<<< HEAD
 <pre class="r"><code>###Discussion: Beta1 is equal to ~1.218. This means that for every 1 gram increase in brain size we can expect an increase in maximum longevity of ~1.218 months. The p-value associated with beta1 is very well under 0.05; therefore we can reject the null hypothesis that beta1 = 0.
 
 ##Log-transformed variables:
+=======
+<pre class="r"><code>##Log-transformed variables:
+>>>>>>> origin/master
 summary(log_m)</code></pre>
 <pre><code>## 
 ## Call:
@@ -353,10 +635,14 @@ log_ci</code></pre>
 <pre><code>##                    5 %      95 %
 ## (Intercept)  4.7644934 4.9934084
 ## df$log_brain 0.2046396 0.2636595</code></pre>
+<<<<<<< HEAD
 <pre class="r"><code>###Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
 
 
 ##Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
+=======
+<pre class="r"><code>##Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
+>>>>>>> origin/master
 
 ##Original Variables:
 ci&lt;-predict(m,newdata =data.frame(Brain_Size_Species_Mean=df$Brain_Size_Species_Mean),interval=&quot;confidence&quot;,level=0.90)  # for a vector of values
@@ -525,6 +811,7 @@ log_regression_plot</code></pre>
 
 ##Original data:
 
+<<<<<<< HEAD
 m</code></pre>
 <pre><code>## 
 ## Call:
@@ -573,6 +860,10 @@ CI&lt;-c(ylwr,yupr)
 CI #Confidence interval</code></pre>
 <pre><code>## [1] 168.444 215.953</code></pre>
 <pre class="r"><code>##Discussion: First of all, I know that this last section isn't technically right as I'm reporting confidence intervals and not prediction intervals. I know that we are meant to use the predict() function, but when I tried to format it as we did in class [predict(m,newdata=data.frame(Brain_Size_Species_Mean=800),interval=&quot;prediction&quot;,level=0.90)] I kept getting an error message that showed that it was trying to pull predicted intervals for all the values in that column rather than just predicting a point estimate and interval for 800 grams.. I'll be sure to come trouble-shoot this with you on Wednesday if I can't figure it out by then. However, to answer the question you posed, I think it is unlikely that either regression will provide a reliable prediction of longevity given their relatively low coefficients of determination. Also, from looking at the plots of the two regressions, the original variables are clearly very skewed to the left of the regrssion, and there is a lower level of certainty as x increases. For a brain size as high as 800 grams, we can not expect a realistic prediction from this model (as evidenced by the point estimate of ~1223 months for a brain size of 800g). In regard to which model is preferable, judging from the plots, the log-transformed data appears to adhere more closely to a normal distribution while also showing more consistency in confidence intervals. Overall, this would make the log-transformed model more conducive to predicting longevity from a wide range of brain sizes.</code></pre>
+=======
+
+##Log-transformed data:</code></pre>
+>>>>>>> origin/master
 </div>
 
 
