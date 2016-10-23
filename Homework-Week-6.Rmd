@@ -2,6 +2,17 @@
 title: "Homework-Week-6"
 output: html_document
 ---
+```{R}
+knitr::opts_chunk$set(
+    echo = TRUE,
+    warning = FALSE,
+    comment = "##",
+    prompt = TRUE,
+    tidy = TRUE,
+    tidy.opts = list(width.cutoff = 75),
+    fig.path = "img/"
+)
+```
 #[1]Write a simple R function, Z.prop.test(), that can perform one- or two-sample Z-tests for proportion data, using the following guidelines.
 
 ###Your function should take the following arguments: p1 and n1 (no default) to pose as the estimated proportion and sample size (i.e., based on your sample data); p2 and n2 (both defaulting to NULL) that contain a second sample's proportion and sample size data in the event of a two-sample test; p0 (no default) as the expected value for the population proportion; and alternative (default "two.sided") and conf.level (default 0.95), to be used in the same way as in the function t.test().
@@ -43,30 +54,28 @@ Z.prop.test<-function(p1,n1,p2=NULL,n2=NULL,p0,alternative = "two.sided",conf.le
 
 #[2] The dataset from Kamilar and Cooper has in it a large number of variables related to life history and body size. For this exercise, the end aim is to fit a simple linear regression model to predict longevity ("MaxLongevity_m") measured in months from species' brain size ("Brain_Size_Species_Mean") measured in grams. Do the following for both longevity~brain size and log(longevity)~log(brain size).
 ```{R}
+##Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
 library(curl)
 f<-curl("https://raw.githubusercontent.com/difiore/ADA2016/master/KamilarAndCooperData.csv")
 d<-read.csv(f,header=TRUE,sep = ",",stringsAsFactors = FALSE)
 log_brain<-log(d$Brain_Size_Species_Mean)
 log_longevity<-log(d$MaxLongevity_m)
 df<-cbind(d,log_brain,log_longevity)
-##Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
-
 library(ggplot2)
 
 ##Maximum longevity regressed on brain size:
 
 m<-lm(df$MaxLongevity_m~df$Brain_Size_Species_Mean,data=df)
 summary(m)
-lm_eqn = function(m) {
-
+lm_eqn = function(m){
   l <- list(a = format(coef(m)[1], digits = 5),
       b = format(abs(coef(m)[2]), digits = 3),
       r2 = format(summary(m)$r.squared, digits = 3));
-  if (coef(m)[2] >= 0)  {
+  if (coef(m)[2] >= 0){
     eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2,l)
-  } else {
-    eq <- substitute(italic(y) == a - b %.% italic(x)*","~~italic(r)^2~"="~r2,l)  
-  }
+    } else {
+    eq <- substitute(italic(y) == a - b %.% italic(x)*","~~italic(r)^2~"="~r2,l)
+    }
   as.character(as.expression(eq));                 
 }
 regression_plot<-ggplot(data=df,aes(x=df$Brain_Size_Species_Mean,y=df$MaxLongevity_m))+xlab("Brain Size (g)")+ylab("Maximum Longevity (mo)")+geom_point()+geom_smooth(method="lm",formula=y~x)+ geom_text(aes(x = 350, y = 250, label = lm_eqn(lm(df$MaxLongevity_m ~ df$Brain_Size_Species_Mean, df))), parse = TRUE)
@@ -124,7 +133,6 @@ log_ci<-confint(log_m,level = 0.9)
 log_ci
 
 ###Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
-
 
 ##Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
 
@@ -194,8 +202,4 @@ CI<-c(ylwr,yupr)
 CI #Confidence interval
 
 ##Discussion: First of all, I know that this last section isn't technically right as I'm reporting confidence intervals and not prediction intervals. I know that we are meant to use the predict() function, but when I tried to format it as we did in class [predict(m,newdata=data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.90)] I kept getting an error message that showed that it was trying to pull predicted intervals for all the values in that column rather than just predicting a point estimate and interval for 800 grams.. I'll be sure to come trouble-shoot this with you on Wednesday if I can't figure it out by then. However, to answer the question you posed, I think it is unlikely that either regression will provide a reliable prediction of longevity given their relatively low coefficients of determination. Also, from looking at the plots of the two regressions, the original variables are clearly very skewed to the left of the regrssion, and there is a lower level of certainty as x increases. For a brain size as high as 800 grams, we can not expect a realistic prediction from this model (as evidenced by the point estimate of ~1223 months for a brain size of 800g). In regard to which model is preferable, judging from the plots, the log-transformed data appears to adhere more closely to a normal distribution while also showing more consistency in confidence intervals. Overall, this would make the log-transformed model more conducive to predicting longevity from a wide range of brain sizes.
-=======
-
-##Log-transformed data:
-
->>>>>>> origin/master
+```
