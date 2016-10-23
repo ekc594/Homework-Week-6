@@ -12,21 +12,22 @@ output: html_document
 
 ```{R,echo=TRUE}
 
-Z.prop.test<-function(p1,n1,p2=NULL,n2=NULL,p0,alternative = "two.sided",conf.level = 0.95){ #this step set up the structure and default values for the function
-  if(is.nul(p2)||is.null(n2)){ #first criterion check determines whether we run a one sample or two sample test
-  if(n1*p1<=5||n1*(1-p1)<=5){ #Checking validity of normal distribution
-    warning("Warning: Normal Dist Invalid")
-  }
-    z<-(p1-p0)/sqrt(p0(1-p0)/n1) #if validity is satisfied, a one sample test is run
+Z.prop.test<-function(p1,n1,p2=NULL,n2=NULL,p0,alternative = "two.sided",conf.level = 0.95){
+  #this step set up the structure and default values for the function
+  if(is.nul(p2)||is.null(n2)){
+    #first criterion check determines whether we run a one sample or two sample test
+    if(n1*p1<=5||n1*(1-p1)<=5){
+      warning("Warning: Normal Dist Invalid")#Checking validity of normal distribution
+      }
+    z<-(p1-p0)/sqrt(p0(1-p0)/n1)
     CI <- (p1)+c(-1,1)*qnorm(conf.level+(1-conf.level)/2)*sqrt(p0*(1-p0)/n1)
   }else{ #second scenario in which p2 and n2 are not null - 2 sample test
     if(p1*n1<=5||n1*(1-p1)<=5||p2*n2<=5||n2*(1-p2)<=5){
       warning("Warning: Normal Dist Invalid")
-    }
+    }#if validity is satisfied, a one sample test is run
     pstar<-(p1*n1+p2*n2)/(n1+n2)
     z<-(p2-p1-p0)/sqrt(pstar*(1-pstar)*((1/n1)+(1/n2)))
-    CI <- sort((p1-p2)+c(-1,1)*qnorm(conf.level+(1-conf.level)/2)*sqrt(pstar*(1-pstar)*((1/n1)+(1/n2)))
-  }
+    CI <- sort((p1-p2)+c(-1,1)*qnorm(conf.level+(1-conf.level)/2)*sqrt(pstar*(1-pstar)*((1/n1)+(1/n2))))
   if(alternative=="greater"){ #if we specify "greater", we want a one-sided upper tail test like this:
     p<-pnorm(z,lower.tail=FALSE)
   }else if(alternative=="less"){ #if we specify "greater", we want a one-sided lower tail test like this:
@@ -36,22 +37,18 @@ Z.prop.test<-function(p1,n1,p2=NULL,n2=NULL,p0,alternative = "two.sided",conf.le
     if(z<0){p<-2*pnorm(z,lower.tail = T)}
   }
   return(list(z=z,p=p,CI=CI)) #return results in list format
+  }
 }
 ```
 
-
 #[2] The dataset from Kamilar and Cooper has in it a large number of variables related to life history and body size. For this exercise, the end aim is to fit a simple linear regression model to predict longevity ("MaxLongevity_m") measured in months from species' brain size ("Brain_Size_Species_Mean") measured in grams. Do the following for both longevity~brain size and log(longevity)~log(brain size).
-```{R,echo=TRUE}
+```{R}
 library(curl)
 f<-curl("https://raw.githubusercontent.com/difiore/ADA2016/master/KamilarAndCooperData.csv")
 d<-read.csv(f,header=TRUE,sep = ",",stringsAsFactors = FALSE)
-head(d)
-str(d)
 log_brain<-log(d$Brain_Size_Species_Mean)
 log_longevity<-log(d$MaxLongevity_m)
 df<-cbind(d,log_brain,log_longevity)
-head(df)
-str(df)
 ##Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
 
 library(ggplot2)
@@ -112,6 +109,7 @@ ci <- c(t$lower, t$upper)  # by hand
 ci
 ci<-confint(m,level = 0.9)
 ci
+###Discussion: Beta1 is equal to ~1.218. This means that for every 1 gram increase in brain size we can expect an increase in maximum longevity of ~1.218 months. The p-value associated with beta1 is very well under 0.05; therefore we can reject the null hypothesis that beta1 = 0.
 
 ##Log-transformed variables:
 summary(log_m)
@@ -124,6 +122,9 @@ log_t$log_calcp <- 2 * pt(log_t$log_calct, df = 998, lower.tail = FALSE)
 log_t
 log_ci<-confint(log_m,level = 0.9)
 log_ci
+
+###Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
+
 
 ##Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
 
@@ -166,8 +167,29 @@ log_regression_plot
 ##Produce a point estimate and associated 90 percent PI for the longevity of a species whose brain weight is 800 gm. Do you trust the model to predict observations accurately for this value of the explanatory variable? Why or why not?
 
 ##Original data:
-predict(m,newdata = data.frame(df$Brain_Size_Species_Mean=800),interval = "prediction",level=0.90)
+
+m
+beta1<-1.218
+beta0<-248.952
+y<-beta1*800+beta0
+y #point estimate
+confint(m,level=0.9)
+ylwr<-1.036*800+130.54
+yupr<-1.4*800+267.36
+CI<-c(ylwr,yupr)
+CI #Confidence interval
 
 ##Log-transformed data:
-predict(log_m, newdata=data.frame(Brain_Size_Species_Mean=log(800)), interval="prediction", level=0.90)
-newdata
+
+log_m
+beta1<-0.2341
+beta0<-4.879
+y<-beta1*800+beta0
+y #point estimate
+confint(log_m,level=0.9)
+ylwr<-0.2046*800+4.764
+yupr<-0.2637*800+4.993
+CI<-c(ylwr,yupr)
+CI #Confidence interval
+
+##Discussion: First of all, I know that this last section isn't technically right as I'm reporting confidence intervals and not prediction intervals. I know that we are meant to use the predict() function, but when I tried to format it as we did in class [predict(m,newdata=data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.90)] I kept getting an error message that showed that it was trying to pull predicted intervals for all the values in that column rather than just predicting a point estimate and interval for 800 grams.. I'll be sure to come trouble-shoot this with you on Wednesday if I can't figure it out by then. However, to answer the question you posed, I think it is unlikely that either regression will provide a reliable prediction of longevity given their relatively low coefficients of determination. Also, from looking at the plots of the two regressions, the original variables are clearly very skewed to the left of the regrssion, and there is a lower level of certainty as x increases. For a brain size as high as 800 grams, we can not expect a realistic prediction from this model (as evidenced by the point estimate of ~1223 months for a brain size of 800g). In regard to which model is preferable, judging from the plots, the log-transformed data appears to adhere more closely to a normal distribution while also showing more consistency in confidence intervals. Overall, this would make the log-transformed model more conducive to predicting longevity from a wide range of brain sizes.
