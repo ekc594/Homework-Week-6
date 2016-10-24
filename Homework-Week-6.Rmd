@@ -8,7 +8,6 @@ knitr::opts_chunk$set(
     warning = FALSE,
     comment = "##",
     prompt = TRUE,
-    tidy = TRUE,
     tidy.opts = list(width.cutoff = 75),
     fig.path = "img/"
 )
@@ -53,8 +52,8 @@ Z.prop.test<-function(p1,n1,p2=NULL,n2=NULL,p0,alternative = "two.sided",conf.le
 ```
 
 #[2] The dataset from Kamilar and Cooper has in it a large number of variables related to life history and body size. For this exercise, the end aim is to fit a simple linear regression model to predict longevity ("MaxLongevity_m") measured in months from species' brain size ("Brain_Size_Species_Mean") measured in grams. Do the following for both longevity~brain size and log(longevity)~log(brain size).
-```{R}
-##Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
+```{R,echo=TRUE}
+#Fit the regression model and, using {ggplot2}, produce a scatterplot with the fitted line superimposed upon the data. Append the the fitted model equation to your plot.
 library(curl)
 f<-curl("https://raw.githubusercontent.com/difiore/ADA2016/master/KamilarAndCooperData.csv")
 d<-read.csv(f,header=TRUE,sep = ",",stringsAsFactors = FALSE)
@@ -63,7 +62,7 @@ log_longevity<-log(d$MaxLongevity_m)
 df<-cbind(d,log_brain,log_longevity)
 library(ggplot2)
 
-##Maximum longevity regressed on brain size:
+#Maximum longevity regressed on brain size:
 
 m<-lm(df$MaxLongevity_m~df$Brain_Size_Species_Mean,data=df)
 summary(m)
@@ -81,7 +80,7 @@ lm_eqn = function(m){
 regression_plot<-ggplot(data=df,aes(x=df$Brain_Size_Species_Mean,y=df$MaxLongevity_m))+xlab("Brain Size (g)")+ylab("Maximum Longevity (mo)")+geom_point()+geom_smooth(method="lm",formula=y~x)+ geom_text(aes(x = 350, y = 250, label = lm_eqn(lm(df$MaxLongevity_m ~ df$Brain_Size_Species_Mean, df))), parse = TRUE)
 regression_plot
 
-##Log-transformed maximum longevity regressed on log-transformed brain size:
+#Log-transformed maximum longevity regressed on log-transformed brain size:
 
 log_m<-lm(df$log_longevity~df$log_brain,data=df)
 summary(log_m)
@@ -101,9 +100,9 @@ lm_eqn = function(log_m) {
 log_regression_plot<-ggplot(data=df,aes(x=df$log_brain,y=df$log_longevity))+xlab("Log-Transformed Brain Size (g)")+ylab("Log-Transformed Maximum Longevity (mo)")+geom_point()+geom_smooth(method="lm",formula=y~x)+ geom_text(aes(x = 4.5, y = 4.7, label = lm_eqn(lm(df$log_longevity ~ df$log_brain, df))), parse = TRUE)
 log_regression_plot
 
-##Identify and interpret the point estimate of the slope ($\beta_1$), as well as the outcome of the test associated with the hypotheses H0: $\beta_1$ = 0; HA: $\beta_1$ ≠ 0. Also, find a 90 percent CI for the slope ($\beta_1$) parameter.
+#Identify and interpret the point estimate of the slope ($\beta_1$), as well as the outcome of the test associated with the hypotheses H0: $\beta_1$ = 0; HA: $\beta_1$ ≠ 0. Also, find a 90 percent CI for the slope ($\beta_1$) parameter.
 
-##Original variables:
+#Original variables:
 summary(m)
 t<-coef(summary(m))
 t<-data.frame(unlist(t))
@@ -118,9 +117,10 @@ ci <- c(t$lower, t$upper)  # by hand
 ci
 ci<-confint(m,level = 0.9)
 ci
-###Discussion: Beta1 is equal to ~1.218. This means that for every 1 gram increase in brain size we can expect an increase in maximum longevity of ~1.218 months. The p-value associated with beta1 is very well under 0.05; therefore we can reject the null hypothesis that beta1 = 0.
-
-##Log-transformed variables:
+#Discussion: Beta1 is equal to ~1.218. This means that for every 1 gram increase in brain size we can expect an increase in maximum longevity of ~1.218 months. The p-value associated with beta1 is very well under 0.05; therefore we can reject the null hypothesis that beta1 = 0.
+```
+```{R}
+#Log-transformed variables:
 summary(log_m)
 log_t<-coef(summary(log_m))
 log_t<-data.frame(unlist(log_t))
@@ -132,11 +132,11 @@ log_t
 log_ci<-confint(log_m,level = 0.9)
 log_ci
 
-###Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
+#Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
 
-##Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
+#Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
 
-##Original Variables:
+#Original Variables:
 ci<-predict(m,newdata =data.frame(Brain_Size_Species_Mean=df$Brain_Size_Species_Mean),interval="confidence",level=0.90)  # for a vector of values
 head(ci)
 df <- cbind(df, ci)
@@ -153,7 +153,7 @@ regression_plot<-regression_plot+
   ggtitle("Linear Regression of Longevity on Brain Size")
 regression_plot
 
-##Log-transformed variables:
+#Log-transformed variables:
 log_ci<-predict(log_m,newdata =data.frame(log_brain=df$log_brain),interval="confidence",level=0.90)
 colnames(log_ci)<-c("log_fit","log_lwr","log_upr")
 df <- cbind(df, log_ci)
@@ -172,12 +172,13 @@ log_regression_plot<-log_regression_plot+
   ggtitle("Linear Regression of Longevity on Brain Size [log-Transformed]")
 log_regression_plot
 
-##Produce a point estimate and associated 90 percent PI for the longevity of a species whose brain weight is 800 gm. Do you trust the model to predict observations accurately for this value of the explanatory variable? Why or why not?
+#Produce a point estimate and associated 90 percent PI for the longevity of a species whose brain weight is 800 gm. Do you trust the model to predict observations accurately for this value of the explanatory variable? Why or why not?
 
 ##Original data:
+e<-predict(m,newdata = data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.9)
+e #The code isn't returning a point estimate and I'm not sure why...
+str(df$Brain_Size_Species_Mean)
 
-<<<<<<< HEAD
-m
 beta1<-1.218
 beta0<-248.952
 y<-beta1*800+beta0
