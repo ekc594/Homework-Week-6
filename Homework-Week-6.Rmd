@@ -8,6 +8,7 @@ knitr::opts_chunk$set(
     warning = FALSE,
     comment = "##",
     prompt = TRUE,
+    tidy=TRUE,
     tidy.opts = list(width.cutoff = 75),
     fig.path = "img/"
 )
@@ -64,7 +65,7 @@ library(ggplot2)
 
 #Maximum longevity regressed on brain size:
 
-m<-lm(df$MaxLongevity_m~df$Brain_Size_Species_Mean,data=df)
+m<-lm(data=df,MaxLongevity_m~Brain_Size_Species_Mean)
 summary(m)
 lm_eqn = function(m){
   l <- list(a = format(coef(m)[1], digits = 5),
@@ -82,7 +83,7 @@ regression_plot
 
 #Log-transformed maximum longevity regressed on log-transformed brain size:
 
-log_m<-lm(df$log_longevity~df$log_brain,data=df)
+log_m<-lm(data=df,log_longevity~log_brain)
 summary(log_m)
 lm_eqn = function(log_m) {
 
@@ -117,8 +118,9 @@ ci <- c(t$lower, t$upper)  # by hand
 ci
 ci<-confint(m,level = 0.9)
 ci
-#Discussion: Beta1 is equal to ~1.218. This means that for every 1 gram increase in brain size we can expect an increase in maximum longevity of ~1.218 months. The p-value associated with beta1 is very well under 0.05; therefore we can reject the null hypothesis that beta1 = 0.
 ```
+##Discussion: Beta1 is equal to ~1.218. This means that for every 1 gram increase in brain size we can expect an increase in maximum longevity of ~1.218 months. The p-value associated with beta1 is very well under 0.05; therefore we can reject the null hypothesis that beta1 = 0.
+
 ```{R}
 #Log-transformed variables:
 summary(log_m)
@@ -131,9 +133,9 @@ log_t$log_calcp <- 2 * pt(log_t$log_calct, df = 998, lower.tail = FALSE)
 log_t
 log_ci<-confint(log_m,level = 0.9)
 log_ci
-
-#Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
-
+```
+##Discussion: Beta1 for the log-transformed model is equal to ~0.2046. This means that for every 1 unit increase in brain size we can expect an increase in maximum longevity of ~0.2342 months, or about 7 days. Again, the p-value associated with beta1 is much less than 0.05, allowing us to reject the null hypothesis that beta1 = 0.
+```{R}
 #Using your model, add lines for the 90 percent confidence and prediction interval bands on the plot and add a legend to differentiate between the lines.
 
 #Original Variables:
@@ -166,7 +168,7 @@ log_regression_plot<-log_regression_plot+
   geom_line(aes(x=df$log_brain,y=df$log_fit,colour="Regression_Line"))+
   geom_line(aes(x=df$log_brain,y=df$log_lwr,colour="Confidence_Intervals"))+
   geom_line(aes(x=df$log_brain,y=df$log_upr,colour="Confidence_Intervals"))+
-  geom_line(data=df,aes(x=df$log_brain,y=df$log_pi_lwr, colour="Prediction_Intervals"))+
+  geom_line(data=df,aes(x=df$log_brain,y=df$log_pi_lwr,colour="Prediction_Intervals"))+
   geom_line(data=df,aes(x=df$log_brain,y=df$log_pi_upr,colour="Prediction_Intervals"))+
   scale_colour_manual(name="Legend",values = c(Regression_Line="blue",Confidence_Intervals="red",Prediction_Intervals="green"))+
   ggtitle("Linear Regression of Longevity on Brain Size [log-Transformed]")
@@ -175,32 +177,15 @@ log_regression_plot
 #Produce a point estimate and associated 90 percent PI for the longevity of a species whose brain weight is 800 gm. Do you trust the model to predict observations accurately for this value of the explanatory variable? Why or why not?
 
 ##Original data:
-e<-predict(m,newdata = data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.9)
-e #The code isn't returning a point estimate and I'm not sure why...
-str(df$Brain_Size_Species_Mean)
-
-beta1<-1.218
-beta0<-248.952
-y<-beta1*800+beta0
-y #point estimate
-confint(m,level=0.9)
-ylwr<-1.036*800+130.54
-yupr<-1.4*800+267.36
-CI<-c(ylwr,yupr)
-CI #Confidence interval
+yhat<-predict(m,newdata = data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.9)
+yhat
 
 ##Log-transformed data:
 
-log_m
-beta1<-0.2341
-beta0<-4.879
-y<-beta1*800+beta0
-y #point estimate
-confint(log_m,level=0.9)
-ylwr<-0.2046*800+4.764
-yupr<-0.2637*800+4.993
-CI<-c(ylwr,yupr)
-CI #Confidence interval
-
-##Discussion: First of all, I know that this last section isn't technically right as I'm reporting confidence intervals and not prediction intervals. I know that we are meant to use the predict() function, but when I tried to format it as we did in class [predict(m,newdata=data.frame(Brain_Size_Species_Mean=800),interval="prediction",level=0.90)] I kept getting an error message that showed that it was trying to pull predicted intervals for all the values in that column rather than just predicting a point estimate and interval for 800 grams.. I'll be sure to come trouble-shoot this with you on Wednesday if I can't figure it out by then. However, to answer the question you posed, I think it is unlikely that either regression will provide a reliable prediction of longevity given their relatively low coefficients of determination. Also, from looking at the plots of the two regressions, the original variables are clearly very skewed to the left of the regrssion, and there is a lower level of certainty as x increases. For a brain size as high as 800 grams, we can not expect a realistic prediction from this model (as evidenced by the point estimate of ~1223 months for a brain size of 800g). In regard to which model is preferable, judging from the plots, the log-transformed data appears to adhere more closely to a normal distribution while also showing more consistency in confidence intervals. Overall, this would make the log-transformed model more conducive to predicting longevity from a wide range of brain sizes.
+log_yhat<-predict(log_m,newdata = data.frame(log_brain=log(800)),interval = "prediction",level=0.9)
+log_yhat
+exp(log_yhat[1,])
 ```
+##Based on the regression model (m) for the original data, the point estimate of maximum longevity for a species with a mean brain size of 800 grams is 1223.345 months, or ~102 years. The prediction interval ranges from 1021.805 months, or ~85 years (lower-bound) to 1424.884 months, or ~119 years (upper-bound). It is not surprising that the range of this prediction interval is so wide when we consider the pattern of the regression plot. The majority of the species in our dataset have an average brain size of less than 200g (the exceptions being G. gorilla, G. beringei, P. paniscus, and P. troglodytes). As we can see from the confidence intervals, the degree of uncertainty increases as brain size increases. Given that even Pan and Gorilla do not exceed 500g, a point estimate for 800g is not likely to be reliable. Another indicator of the low predictive value of this regression model is the fact that the coefficient of determination (or R-Squared value) is only 0.493. Finally, even without considering specifics of the regression model, we know that 102 years is way to high of an estimate of longevity for a primate species. 
+##Based on the regression model (log_m) for the log-transformed data, the point estimate of maximum longevity for a species with a mean brain size of 800 grams is 629.0118 months, or ~54 years. The prediction interval ranges from 412.1652 months, or ~34 years (lower-bound) to 959.9446 months, or 80 years (upper-bound). There are several reasons why this model is better than that based on the original data. While the range of the prediction interval is still quite large in this model, the point estimate seems much more realistic based on what we know about primate life history. Additionally, the regression plot reveals a much more even spread of  data points along the x-axis. By log-transforming the data, we have reduced the effect of the outliers (especially Pan & Gorilla) and (at least to some extent) normalized the distribution. This being said, I would still not put a lot of faith in the predictive value of this model. While the coefficient of determination (0.578) is higher than that of the first model, it is still not particularly high. Finally, we know that the rate at which longevity increases relative to brain size is going to decrease as brain size increases (essentially, taper off); this pattern is not conducive to a linear model.
+
